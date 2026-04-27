@@ -1,4 +1,5 @@
 export type FoodDeliveryHotspotShape = "card" | "circle" | "pill";
+export type FoodDeliveryHotspotTransition = "instant" | "slide-left" | "slide-right";
 
 export type FoodDeliveryHotspot = {
   cardId: number;
@@ -7,6 +8,7 @@ export type FoodDeliveryHotspot = {
   left: number;
   shape?: FoodDeliveryHotspotShape;
   top: number;
+  transition?: FoodDeliveryHotspotTransition;
   width: number;
 };
 
@@ -34,6 +36,7 @@ function createHotspot(
   cardId: number,
   rect: HotspotRect,
   shape: FoodDeliveryHotspotShape = "pill",
+  transition: FoodDeliveryHotspotTransition = "instant",
 ): FoodDeliveryHotspot {
   return {
     cardId,
@@ -42,6 +45,7 @@ function createHotspot(
     left: rect.left,
     shape,
     top: rect.top,
+    transition,
     width: rect.width,
   };
 }
@@ -197,6 +201,11 @@ function buildHomeHotspots(
   nextHomeId: number,
   leftDetailId: number,
   rightDetailId: number,
+  categoryTransitions: {
+    biryani: FoodDeliveryHotspotTransition;
+    burger: FoodDeliveryHotspotTransition;
+    pizza: FoodDeliveryHotspotTransition;
+  },
 ) {
   return [
     createHotspot("Return to the welcome card", 1, avatarButton, "circle"),
@@ -211,9 +220,23 @@ function buildHomeHotspots(
       "Show the biryani category",
       2,
       biryaniCategoryButton,
+      "pill",
+      categoryTransitions.biryani,
     ),
-    createHotspot("Show the pizza category", 5, pizzaCategoryButton),
-    createHotspot("Show the burger category", 8, burgerCategoryButton),
+    createHotspot(
+      "Show the pizza category",
+      5,
+      pizzaCategoryButton,
+      "pill",
+      categoryTransitions.pizza,
+    ),
+    createHotspot(
+      "Show the burger category",
+      8,
+      burgerCategoryButton,
+      "pill",
+      categoryTransitions.burger,
+    ),
     createHotspot("Open the first featured item", leftDetailId, leftProductCard, "card"),
     createHotspot(
       "Open the second featured item",
@@ -277,7 +300,11 @@ export const foodDeliveryCards: FoodDeliveryCard[] = [
   },
   {
     alt: "Food delivery reference card 2",
-    hotspots: buildHomeHotspots(5, 3, 4),
+    hotspots: buildHomeHotspots(5, 3, 4, {
+      biryani: "instant",
+      burger: "slide-left",
+      pizza: "slide-left",
+    }),
     id: 2,
     src: buildCardSource(2),
     title: "Card 2 Comparison",
@@ -306,7 +333,11 @@ export const foodDeliveryCards: FoodDeliveryCard[] = [
   },
   {
     alt: "Food delivery reference card 5",
-    hotspots: buildHomeHotspots(8, 6, 7),
+    hotspots: buildHomeHotspots(8, 6, 7, {
+      biryani: "slide-right",
+      burger: "slide-left",
+      pizza: "instant",
+    }),
     id: 5,
     src: buildCardSource(5),
     title: "Card 5 Comparison",
@@ -335,7 +366,11 @@ export const foodDeliveryCards: FoodDeliveryCard[] = [
   },
   {
     alt: "Food delivery reference card 8",
-    hotspots: buildHomeHotspots(11, 9, 10),
+    hotspots: buildHomeHotspots(11, 9, 10, {
+      biryani: "slide-right",
+      burger: "instant",
+      pizza: "slide-right",
+    }),
     id: 8,
     src: buildCardSource(8),
     title: "Card 8 Comparison",
@@ -364,7 +399,11 @@ export const foodDeliveryCards: FoodDeliveryCard[] = [
   },
   {
     alt: "Food delivery reference card 11",
-    hotspots: buildHomeHotspots(2, 12, 13),
+    hotspots: buildHomeHotspots(2, 12, 13, {
+      biryani: "slide-right",
+      burger: "slide-right",
+      pizza: "slide-right",
+    }),
     id: 11,
     src: buildCardSource(11),
     title: "Card 11 Comparison",

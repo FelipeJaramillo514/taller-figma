@@ -1,10 +1,14 @@
+import type { CSSProperties, ReactNode } from "react";
 import Image from "next/image";
 
 type FoodDeliveryReferenceCardProps = {
   alt: string;
+  className?: string;
   overlayMode?: "normal" | "difference";
   overlayOpacity?: number;
+  priority?: boolean;
   showReferenceOverlay?: boolean;
+  style?: CSSProperties;
   src: string;
 };
 
@@ -32,18 +36,59 @@ export function FoodDeliveryReferenceCard({
 
 export function FoodDeliveryReferenceCardCanvas({
   alt,
+  className,
   overlayMode = "normal",
   overlayOpacity = 0.55,
+  priority = true,
   showReferenceOverlay = false,
+  style,
   src,
 }: FoodDeliveryReferenceCardProps) {
   return (
+    <FoodDeliveryReferenceCardViewport>
+      <FoodDeliveryReferenceCardImageLayer
+        alt={alt}
+        className={className}
+        overlayMode={overlayMode}
+        overlayOpacity={overlayOpacity}
+        priority={priority}
+        showReferenceOverlay={showReferenceOverlay}
+        src={src}
+        style={style}
+      />
+    </FoodDeliveryReferenceCardViewport>
+  );
+}
+
+export function FoodDeliveryReferenceCardViewport({
+  children,
+}: Readonly<{
+  children: ReactNode;
+}>) {
+  return (
     <article className="relative h-[779px] w-[360px] overflow-hidden rounded-[34px] bg-[#f5efed] shadow-[0_28px_64px_rgba(76,60,66,0.26)]">
+      {children}
+    </article>
+  );
+}
+
+export function FoodDeliveryReferenceCardImageLayer({
+  alt,
+  className,
+  overlayMode = "normal",
+  overlayOpacity = 0.55,
+  priority = true,
+  showReferenceOverlay = false,
+  style,
+  src,
+}: FoodDeliveryReferenceCardProps) {
+  return (
+    <div className={`absolute inset-0 ${className ?? ""}`} style={style}>
       <Image
         src={src}
         alt={alt}
         fill
-        priority
+        priority={priority}
         sizes="360px"
         className="object-cover"
       />
@@ -53,7 +98,7 @@ export function FoodDeliveryReferenceCardCanvas({
           src={src}
           alt=""
           fill
-          priority
+          priority={priority}
           sizes="360px"
           className={`pointer-events-none absolute inset-0 z-40 ${
             overlayMode === "difference" ? "mix-blend-difference" : ""
@@ -61,6 +106,6 @@ export function FoodDeliveryReferenceCardCanvas({
           style={{ opacity: overlayOpacity }}
         />
       ) : null}
-    </article>
+    </div>
   );
 }
